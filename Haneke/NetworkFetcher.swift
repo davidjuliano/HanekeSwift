@@ -29,8 +29,11 @@ public class NetworkFetcher<T : DataConvertible> : Fetcher<T> {
     
     public init(URL : NSURL, includingQueryStringInKey shouldIncludeQueryString : Bool = true) {
         self.URL = URL
-
-		let key: String = shouldIncludeQueryString ? URL.absoluteString : "\(URL.scheme)://\(URL.host)\(URL.path)"
+		
+		var key: String = URL.absoluteString
+		if let rangeOfQueryString = key.rangeOfString("?") where !shouldIncludeQueryString {
+			key = key.substringToIndex(rangeOfQueryString.startIndex)
+		}
         super.init(key: key)
     }
     
